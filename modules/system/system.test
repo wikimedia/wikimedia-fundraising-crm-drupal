@@ -2712,3 +2712,24 @@ class TokenScanTest extends DrupalWebTestCase {
   }
 }
 
+/**
+ * Test registry autoloader
+ */
+class AutoloadTest extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Autoloader and registry',
+      'description' => 'Check that classes are correctly inserted into the registry and are discoverable by the autoloader.',
+      'group' => 'System',
+    );
+  }
+
+  function testGlobalNamespace() {
+    $this->assertTrue(class_exists('EntityFieldQuery'), 'Class with global namespace can be autoloaded.');
+  }
+
+  function testNamespacedClass() {
+    $this->assertTrue(class_exists('foo\bar\NamespacedClass'), 'Namespaced class can be autoloaded.');
+  }
+}

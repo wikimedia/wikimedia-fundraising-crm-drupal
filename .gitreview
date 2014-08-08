@@ -2,5 +2,5 @@
 host=gerrit.wikimedia.org
 port=29418
 project=wikimedia/fundraising/crm/drupal.git
-defaultbranch=master
+defaultbranch=contrib
 defaultrebase=0

@@ -141,8 +141,3 @@ DirectoryIndex index.php index.html index.htm
     </FilesMatch>
   </IfModule>
 </IfModule>
-
-# Tell Drupal it's running under HTTP if the X-Forwarded-Proto header says so
-<IfModule setenvif_module>
-  SetEnvIf X_FORWARDED_PROTO https HTTPS=on
-</IfModule>

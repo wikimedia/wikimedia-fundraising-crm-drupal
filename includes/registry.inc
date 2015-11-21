@@ -169,7 +169,7 @@ function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
   if (preg_match('/^<\?(?:php)?\s*(?:declare[^;]+;\s*)?namespace\s+\\\\?([a-zA-Z0-9_\\\\]+)/ms', $contents, $matches)) {
     $namespace = $matches[1] . '\\';
   }
-  if (preg_match_all('/^\s*(?:abstract|final)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
+  if (preg_match_all('/^\s*(?:abstract|final)?\s*(class|interface|trait)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
     foreach ($matches[2] as $key => &$name) {
       $name = $namespace . $name;
       db_merge('registry')

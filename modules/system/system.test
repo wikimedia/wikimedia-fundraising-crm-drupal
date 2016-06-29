@@ -2968,5 +2968,12 @@ class ConfirmFormTest extends DrupalWebTestCase {
     $links = $this->xpath('//a[normalize-space(text())=:label and @href=:url]', array(':label' => t('Cancel'), ':url' => $url));
     $message = ($message ? $message : format_string('Cancel link with url %url found.', array('%url' => $url)));
     return $this->assertTrue(isset($links[0]), $message, $group);
+
+  function testGlobalNamespace() {
+    $this->assertTrue(class_exists('EntityFieldQuery'), 'Class with global namespace can be autoloaded.');
+  }
+
+  function testNamespacedClass() {
+    $this->assertTrue(class_exists('foo\bar\NamespacedClass'), 'Namespaced class can be autoloaded.');
   }
 }

@@ -8,7 +8,7 @@
 /**
  * The current system version.
  */
-define('VERSION', '7.43');
+define('VERSION', '7.44');
 
 /**
  * Core API compatibility.
@@ -2214,11 +2214,11 @@ function drupal_bootstrap($phase = NULL, $new_phase = TRUE) {
   static $stored_phase = -1;
 
   if (isset($phase)) {
-  // When not recursing, store the phase name so it's not forgotten while
+    // When not recursing, store the phase name so it's not forgotten while
     // recursing but take care of not going backwards.
     if ($new_phase && $phase >= $stored_phase) {
-    $final_phase = $phase;
-  }
+      $final_phase = $phase;
+    }
 
     // Call a phase if it has not been called before and is below the requested
     // phase.

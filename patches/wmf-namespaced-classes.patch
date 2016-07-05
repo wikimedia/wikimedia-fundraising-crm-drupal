@@ -1,0 +1,79 @@
+commit 98f9e6bffeb2b1819f10ea9e4688ec007b6990c9
+Author: Adam Roses Wight <awight@wikimedia.org>
+Date:   Mon Sep 2 10:23:03 2013 -0700
+
+    (FR #1070) Drupal registry supports namespaces
+    
+    Change-Id: Ibcdaec331293588986813768789705abc31a5b3d
+
+diff --git a/includes/registry.inc b/includes/registry.inc
+index f6c81eb..16385f1 100644
+--- a/includes/registry.inc
++++ b/includes/registry.inc
+@@ -161,8 +161,14 @@ function _registry_parse_files($files) {
+  *   (optional) Weight of the module.
+  */
+ function _registry_parse_file($filename, $contents, $module = '', $weight = 0) {
++  $namespace = '';
++  // We support one namespace per file
++  if (preg_match('/^<\?(?:php)?\s*(?:declare[^;]+;\s*)?namespace\s+\\\\?([a-zA-Z0-9_\\\\]+)/ms', $contents, $matches)) {
++    $namespace = $matches[1] . '\\';
++  }
+   if (preg_match_all('/^\s*(?:abstract|final)?\s*(class|interface)\s+([a-zA-Z0-9_]+)/m', $contents, $matches)) {
+-    foreach ($matches[2] as $key => $name) {
++    foreach ($matches[2] as $key => &$name) {
++      $name = $namespace . $name;
+       db_merge('registry')
+         ->key(array(
+           'name' => $name,
+diff --git a/modules/system/system.info b/modules/system/system.info
+index eb9b96c..083839e 100644
+--- a/modules/system/system.info
++++ b/modules/system/system.info
+@@ -9,6 +9,7 @@ files[] = system.queue.inc
+ files[] = system.tar.inc
+ files[] = system.updater.inc
+ files[] = system.test
++files[] = tests/NamespacedClass.php
+ required = TRUE
+ configure = admin/config/system
+ 
+diff --git a/modules/system/system.test b/modules/system/system.test
+index 99e0cbe..79c9b2f 100644
+--- a/modules/system/system.test
++++ b/modules/system/system.test
+@@ -2712,3 +2712,24 @@ class TokenScanTest extends DrupalWebTestCase {
+   }
+ }
+ 
++/**
++ * Test registry autoloader
++ */
++class AutoloadTest extends DrupalWebTestCase {
++
++  public static function getInfo() {
++    return array(
++      'name' => 'Autoloader and registry',
++      'description' => 'Check that classes are correctly inserted into the registry and are discoverable by the autoloader.',
++      'group' => 'System',
++    );
++  }
++
++  function testGlobalNamespace() {
++    $this->assertTrue(class_exists('EntityFieldQuery'), 'Class with global namespace can be autoloaded.');
++  }
++
++  function testNamespacedClass() {
++    $this->assertTrue(class_exists('foo\bar\NamespacedClass'), 'Namespaced class can be autoloaded.');
++  }
++}
+diff --git a/modules/system/tests/NamespacedClass.php b/modules/system/tests/NamespacedClass.php
+new file mode 100644
+index 0000000..b27aedb
+--- /dev/null
++++ b/modules/system/tests/NamespacedClass.php
+@@ -0,0 +1,4 @@
++<?php namespace foo\bar;
++
++class NamespacedClass {
++}

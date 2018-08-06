@@ -1,0 +1,13 @@
+{
+  "description": "Bickleigh Drupal theme",
+  "version": "1.0.0",
+  "license": "GPL-3.0",
+  "repository": "https://github.com/3sd/bickeigh",
+  "devDependencies": {
+    "bootstrap": "^3.3.7",
+    "gulp": "^4.0.0",
+    "gulp-plumber": "^1.1.0",
+    "gulp-sass": "^4.0.1",
+    "gulp-watch": "^5.0.0"
+  }
+}
